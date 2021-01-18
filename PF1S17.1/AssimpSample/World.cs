@@ -175,7 +175,7 @@ namespace AssimpSample
 
             DrawGround(gl);
             DrawGoal(gl);
-            DrawText(gl);
+            //DrawText(gl);
 
             m_scene.Draw();
             gl.PopMatrix();
