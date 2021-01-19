@@ -149,6 +149,7 @@ namespace AssimpSample
         /// </summary>
         public void Initialize(OpenGL gl)
         {
+            gl.LookAt(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f);
             gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             gl.Color(1f, 0f, 0f);
             // Model sencenja na flat (konstantno)
@@ -166,7 +167,8 @@ namespace AssimpSample
         {
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
 
-            gl.Viewport(0, 0, m_width, m_height);
+            gl.LookAt(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f);
+            //gl.Viewport(0, 0, m_width, m_height);
 
             gl.PushMatrix();
             gl.Translate(0.0f, 0.0f, -m_sceneDistance);

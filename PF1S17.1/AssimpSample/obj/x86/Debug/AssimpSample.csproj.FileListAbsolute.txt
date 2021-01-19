@@ -88,26 +88,3 @@ C:\Users\Nenad\Desktop\RG RA\casovi\cas04\AssimpSample\AssimpSample\obj\x86\Debu
 C:\Users\Nenad\Desktop\RG RA\casovi\cas04\AssimpSample\AssimpSample\obj\x86\Debug\AssimpSample.csproj.CopyComplete
 C:\Users\Nenad\Desktop\RG RA\casovi\cas04\AssimpSample\AssimpSample\obj\x86\Debug\AssimpSample.exe
 C:\Users\Nenad\Desktop\RG RA\casovi\cas04\AssimpSample\AssimpSample\obj\x86\Debug\AssimpSample.pdb
-C:\Users\aleks\Documents\git\repos\rg\PF1S17.1\AssimpSample\bin\Debug\AssimpLib\Assimp32.dll
-C:\Users\aleks\Documents\git\repos\rg\PF1S17.1\AssimpSample\bin\Debug\AssimpLib\Assimp64.dll
-C:\Users\aleks\Documents\git\repos\rg\PF1S17.1\AssimpSample\bin\Debug\AssimpLib\AssimpNet.dll
-C:\Users\aleks\Documents\git\repos\rg\PF1S17.1\AssimpSample\bin\Debug\AssimpSample.exe.config
-C:\Users\aleks\Documents\git\repos\rg\PF1S17.1\AssimpSample\bin\Debug\AssimpSample.exe
-C:\Users\aleks\Documents\git\repos\rg\PF1S17.1\AssimpSample\bin\Debug\AssimpSample.pdb
-C:\Users\aleks\Documents\git\repos\rg\PF1S17.1\AssimpSample\bin\Debug\AssimpNet.dll
-C:\Users\aleks\Documents\git\repos\rg\PF1S17.1\AssimpSample\bin\Debug\SharpGL.dll
-C:\Users\aleks\Documents\git\repos\rg\PF1S17.1\AssimpSample\bin\Debug\SharpGL.SceneGraph.dll
-C:\Users\aleks\Documents\git\repos\rg\PF1S17.1\AssimpSample\bin\Debug\SharpGL.WPF.dll
-C:\Users\aleks\Documents\git\repos\rg\PF1S17.1\AssimpSample\obj\x86\Debug\AssimpSample.csprojAssemblyReference.cache
-C:\Users\aleks\Documents\git\repos\rg\PF1S17.1\AssimpSample\obj\x86\Debug\MainWindow.baml
-C:\Users\aleks\Documents\git\repos\rg\PF1S17.1\AssimpSample\obj\x86\Debug\MainWindow.g.cs
-C:\Users\aleks\Documents\git\repos\rg\PF1S17.1\AssimpSample\obj\x86\Debug\App.g.cs
-C:\Users\aleks\Documents\git\repos\rg\PF1S17.1\AssimpSample\obj\x86\Debug\AssimpSample_Content.g.cs
-C:\Users\aleks\Documents\git\repos\rg\PF1S17.1\AssimpSample\obj\x86\Debug\AssimpSample_MarkupCompile.cache
-C:\Users\aleks\Documents\git\repos\rg\PF1S17.1\AssimpSample\obj\x86\Debug\AssimpSample.g.resources
-C:\Users\aleks\Documents\git\repos\rg\PF1S17.1\AssimpSample\obj\x86\Debug\AssimpSample.Properties.Resources.resources
-C:\Users\aleks\Documents\git\repos\rg\PF1S17.1\AssimpSample\obj\x86\Debug\AssimpSample.csproj.GenerateResource.cache
-C:\Users\aleks\Documents\git\repos\rg\PF1S17.1\AssimpSample\obj\x86\Debug\AssimpSample.csproj.CoreCompileInputs.cache
-C:\Users\aleks\Documents\git\repos\rg\PF1S17.1\AssimpSample\obj\x86\Debug\AssimpSample.csproj.CopyComplete
-C:\Users\aleks\Documents\git\repos\rg\PF1S17.1\AssimpSample\obj\x86\Debug\AssimpSample.exe
-C:\Users\aleks\Documents\git\repos\rg\PF1S17.1\AssimpSample\obj\x86\Debug\AssimpSample.pdb
