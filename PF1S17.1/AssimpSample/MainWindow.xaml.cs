@@ -79,31 +79,13 @@ namespace AssimpSample
             switch (e.Key)
             {
                 case Key.F10: this.Close(); break;
-                case Key.W: m_world.RotationX -= 5.0f; break;
-                case Key.S: m_world.RotationX += 5.0f; break;
-                case Key.A: m_world.RotationY -= 5.0f; break;
-                case Key.D: m_world.RotationY += 5.0f; break;
+                case Key.E: m_world.RotationX -= 5.0f; break;
+                case Key.D: m_world.RotationX += 5.0f; break;
+                case Key.S: m_world.RotationY -= 5.0f; break;
+                case Key.F: m_world.RotationY += 5.0f; break;
                 case Key.Add: m_world.SceneDistance -= 7.0f; break;
                 case Key.Subtract: m_world.SceneDistance += 7.0f; break;
-                case Key.F2:
-                    OpenFileDialog opfModel = new OpenFileDialog();
-                    bool result = (bool)opfModel.ShowDialog();
-                    if (result)
-                    {
-
-                        try
-                        {
-                            World newWorld = new World(Directory.GetParent(opfModel.FileName).ToString(), Path.GetFileName(opfModel.FileName), (int)openGLControl.Width, (int)openGLControl.Height, openGLControl.OpenGL);
-                            m_world.Dispose();
-                            m_world = newWorld;
-                            m_world.Initialize(openGLControl.OpenGL);
-                        }
-                        catch (Exception exp)
-                        {
-                            MessageBox.Show("Neuspesno kreirana instanca OpenGL sveta:\n" + exp.Message, "GRESKA", MessageBoxButton.OK);
-                        }
-                    }
-                    break;
+                case Key.F2: this.Close(); break;
             }
         }
     }
