@@ -8,6 +8,8 @@
 using SharpGL;
 using SharpGL.SceneGraph.Quadrics;
 using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace AssimpSample
 {
@@ -19,6 +21,19 @@ namespace AssimpSample
     public class World : IDisposable
     {
         #region Atributi
+
+        private enum TextureObjects { Grass = 0, Plastic };
+        private readonly int m_textureCount = Enum.GetNames(typeof(TextureObjects)).Length;
+
+        /// <summary>
+        ///	 Identifikatori OpenGL tekstura
+        /// </summary>
+        private uint[] m_textures = null;
+
+        /// <summary>
+        ///	 Putanje do slika koje se koriste za teksture
+        /// </summary>
+        private string[] m_textureFiles = { "..//..//images//grass.jpg", "..//..//images//plastic.jpg" };
 
         /// <summary>
         ///	 Scena koja se prikazuje.
@@ -120,6 +135,7 @@ namespace AssimpSample
             this.m_scene = new AssimpScene(scenePath, sceneFileName, gl);
             this.m_width = width;
             this.m_height = height;
+            m_textures = new uint[m_textureCount];
         }
 
         /// <summary>
@@ -139,16 +155,27 @@ namespace AssimpSample
         /// </summary>
         public void Initialize(OpenGL gl)
         {
-            gl.LookAt(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f);
+            //gl.LookAt(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f);
+            //gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
             gl.ColorMaterial(OpenGL.GL_FRONT, OpenGL.GL_AMBIENT_AND_DIFFUSE);
             gl.Enable(OpenGL.GL_COLOR_MATERIAL);
 
-            gl.Enable(OpenGL.GL_LIGHTING);
-            gl.Enable(OpenGL.GL_NORMALIZE);
+            SetupLighting(gl);
+            SetupTextures(gl);
 
-            float[] global_ambient = new float[] { 0.2f, 0.2f, 0.2f, 1.0f };
-            gl.LightModel(OpenGL.GL_LIGHT_MODEL_AMBIENT, global_ambient);
+            gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+            gl.ShadeModel(OpenGL.GL_SMOOTH);
+            gl.Enable(OpenGL.GL_CULL_FACE);
+            gl.Enable(OpenGL.GL_DEPTH_TEST);
+            m_scene.LoadScene();
+            m_scene.Initialize();
+        }
+
+        private void SetupLighting(OpenGL gl)
+        {
+            gl.Enable(OpenGL.GL_LIGHTING);
 
             float[] light0pos = new float[] { 40.0f, 10.0f, 10.0f, 1.0f };
             float[] light0ambient = new float[] { 0.4f, 0.4f, 0.4f, 1.0f };
@@ -161,15 +188,40 @@ namespace AssimpSample
             gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_SPECULAR, light0specular);
 
             gl.Enable(OpenGL.GL_LIGHT0);
+            gl.Enable(OpenGL.GL_NORMALIZE);
+        }
 
-            gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-            gl.Color(1f, 0f, 0f);
-            
-            gl.ShadeModel(OpenGL.GL_SMOOTH);
-            gl.Enable(OpenGL.GL_CULL_FACE);
-            gl.Enable(OpenGL.GL_DEPTH_TEST);
-            m_scene.LoadScene();
-            m_scene.Initialize();
+        private void SetupTextures(OpenGL gl)
+        {
+            gl.GenTextures(m_textureCount, m_textures);
+            for (int i = 0; i < m_textureCount; ++i)
+            {
+                // Pridruzi teksturu odgovarajucem identifikatoru
+                gl.BindTexture(OpenGL.GL_TEXTURE_2D, m_textures[i]);
+
+                // Ucitaj sliku i podesi parametre teksture
+                Bitmap image = new Bitmap(m_textureFiles[i]);
+                // rotiramo sliku zbog koordinantog sistema opengl-a
+                image.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                Rectangle rect = new Rectangle(0, 0, image.Width, image.Height);
+                // RGBA format (dozvoljena providnost slike tj. alfa kanal)
+                BitmapData imageData = image.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+
+                gl.Build2DMipmaps(OpenGL.GL_TEXTURE_2D, (int)OpenGL.GL_RGBA8, image.Width, image.Height, OpenGL.GL_BGRA, OpenGL.GL_UNSIGNED_BYTE, imageData.Scan0);
+                gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_LINEAR);		// Linear Filtering
+                gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_LINEAR);      // Linear Filtering
+                
+                image.UnlockBits(imageData);
+                image.Dispose();
+            }
+
+            gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_NEAREST);
+            gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_NEAREST);
+            gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_WRAP_S, OpenGL.GL_REPEAT);
+            gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_WRAP_T, OpenGL.GL_REPEAT);
+
+            gl.Enable(OpenGL.GL_TEXTURE_2D);
+            gl.TexEnv(OpenGL.GL_TEXTURE_ENV, OpenGL.GL_TEXTURE_ENV_MODE, OpenGL.GL_ADD);
         }
 
         /// <summary>
@@ -180,6 +232,7 @@ namespace AssimpSample
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
 
             gl.LookAt(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f);
+            //gl.Enable(OpenGL.GL_AUTO_NORMAL);
 
             gl.PushMatrix();
             gl.Translate(0.0f, 0.0f, -m_sceneDistance);
@@ -198,26 +251,43 @@ namespace AssimpSample
 
         private void DrawGround(OpenGL gl)
         {
+            gl.Color(0.0f, 0.0f, 0.0f);
             gl.PushMatrix();
             gl.Translate(0, -1f, 0);
+
+            gl.MatrixMode(OpenGL.GL_TEXTURE);
+            gl.PushMatrix();
+            gl.Scale(20.0f, 20.0f, 20.0f);
+
+            gl.BindTexture(OpenGL.GL_TEXTURE_2D, m_textures[(int)TextureObjects.Grass]);
             gl.Begin(OpenGL.GL_QUADS);
 
-            gl.Color(0.6f, 0.6f, 0.6f);
+            gl.TexCoord(1.0f, 0.0f);
+            gl.Vertex(35f, 0, 35f);
 
-            gl.Vertex(25f, 0, 45f);
-            gl.Vertex(25f, 0, -45f);
-            gl.Vertex(-25f, 0, -45f);
-            gl.Vertex(-25f, 0, 45f);
+            gl.TexCoord(1.0f, 1.0f);
+            gl.Vertex(35f, 0, -35f);
+
+            gl.TexCoord(0.0f, 1.0f);
+            gl.Vertex(-35f, 0, -35f);
+
+            gl.TexCoord(0.0f, 0.0f);
+            gl.Vertex(-35f, 0, 35f);
 
             gl.End();
+            gl.PopMatrix();
+            gl.MatrixMode(OpenGL.GL_MODELVIEW);
+
             gl.PopMatrix();
         }
 
         private void DrawGoal(OpenGL gl)
         {
-            gl.Color(0.9f, 0.9f, 0.9f);
+            gl.Color(1.0f, 1.0f, 1.0f);
 
             gl.PushMatrix();
+            //gl.TexEnv(OpenGL.GL_TEXTURE_ENV, OpenGL.GL_TEXTURE_ENV_MODE, OpenGL.GL_MODULATE);
+            gl.BindTexture(OpenGL.GL_TEXTURE_2D, m_textures[(int)TextureObjects.Plastic]);
 
             gl.Translate(-12, -1, -30);
             gl.Rotate(-90, 0, 0);
