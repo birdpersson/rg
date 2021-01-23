@@ -21,16 +21,6 @@ namespace AssimpSample
         #region Atributi
 
         /// <summary>
-        ///	 Ugao rotacije Meseca
-        /// </summary>
-        private float m_moonRotation = 0.0f;
-
-        /// <summary>
-        ///	 Ugao rotacije Zemlje
-        /// </summary>
-        private float m_earthRotation = 0.0f;
-
-        /// <summary>
         ///	 Scena koja se prikazuje.
         /// </summary>
         private AssimpScene m_scene;
@@ -150,10 +140,32 @@ namespace AssimpSample
         public void Initialize(OpenGL gl)
         {
             gl.LookAt(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f);
+
+            gl.ColorMaterial(OpenGL.GL_FRONT, OpenGL.GL_AMBIENT_AND_DIFFUSE);
+            gl.Enable(OpenGL.GL_COLOR_MATERIAL);
+
+            gl.Enable(OpenGL.GL_LIGHTING);
+            gl.Enable(OpenGL.GL_NORMALIZE);
+
+            float[] global_ambient = new float[] { 0.2f, 0.2f, 0.2f, 1.0f };
+            gl.LightModel(OpenGL.GL_LIGHT_MODEL_AMBIENT, global_ambient);
+
+            float[] light0pos = new float[] { 40.0f, 10.0f, 10.0f, 1.0f };
+            float[] light0ambient = new float[] { 0.4f, 0.4f, 0.4f, 1.0f };
+            float[] light0diffuse = new float[] { 0.3f, 0.3f, 0.3f, 1.0f };
+            float[] light0specular = new float[] { 0.8f, 0.8f, 0.8f, 1.0f };
+
+            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_POSITION, light0pos);
+            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_AMBIENT, light0ambient);
+            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_DIFFUSE, light0diffuse);
+            gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_SPECULAR, light0specular);
+
+            gl.Enable(OpenGL.GL_LIGHT0);
+
             gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             gl.Color(1f, 0f, 0f);
-            // Model sencenja na flat (konstantno)
-            gl.ShadeModel(OpenGL.GL_FLAT);
+            
+            gl.ShadeModel(OpenGL.GL_SMOOTH);
             gl.Enable(OpenGL.GL_CULL_FACE);
             gl.Enable(OpenGL.GL_DEPTH_TEST);
             m_scene.LoadScene();
@@ -168,7 +180,6 @@ namespace AssimpSample
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
 
             gl.LookAt(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f);
-            //gl.Viewport(0, 0, m_width, m_height);
 
             gl.PushMatrix();
             gl.Translate(0.0f, 0.0f, -m_sceneDistance);
