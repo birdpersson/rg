@@ -155,16 +155,16 @@ namespace AssimpSample
         /// </summary>
         public void Initialize(OpenGL gl)
         {
-            //gl.LookAt(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f);
-            //gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            gl.LookAt(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f);
+            gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-            gl.ColorMaterial(OpenGL.GL_FRONT, OpenGL.GL_AMBIENT_AND_DIFFUSE);
             gl.Enable(OpenGL.GL_COLOR_MATERIAL);
+            gl.ColorMaterial(OpenGL.GL_FRONT, OpenGL.GL_AMBIENT_AND_DIFFUSE);
 
             SetupLighting(gl);
             SetupTextures(gl);
 
-            gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            //gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
             gl.ShadeModel(OpenGL.GL_SMOOTH);
             gl.Enable(OpenGL.GL_CULL_FACE);
@@ -176,6 +176,7 @@ namespace AssimpSample
         private void SetupLighting(OpenGL gl)
         {
             gl.Enable(OpenGL.GL_LIGHTING);
+            gl.Enable(OpenGL.GL_NORMALIZE);
 
             float[] light0pos = new float[] { 40.0f, 10.0f, 10.0f, 1.0f };
             float[] light0ambient = new float[] { 0.4f, 0.4f, 0.4f, 1.0f };
@@ -186,13 +187,29 @@ namespace AssimpSample
             gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_AMBIENT, light0ambient);
             gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_DIFFUSE, light0diffuse);
             gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_SPECULAR, light0specular);
-
+            //gl.Light(OpenGL.GL_LIGHT0, OpenGL.GL_SPOT_CUTOFF, 180.0f);
             gl.Enable(OpenGL.GL_LIGHT0);
-            gl.Enable(OpenGL.GL_NORMALIZE);
+
+            float[] light1pos = new float[] { 0.0f, 10.0f, -70.0f, 1.0f };
+            float[] light1ambient = new float[] { 1.0f, 0.4f, 0.7f, 1.0f };
+            float[] light1diffuse = new float[] { 0.3f, 0.3f, 0.3f, 1.0f };
+            float[] light1specular = new float[] { 0.8f, 0.8f, 0.8f, 1.0f };
+
+            gl.Light(OpenGL.GL_LIGHT1, OpenGL.GL_POSITION, light1pos);
+            gl.Light(OpenGL.GL_LIGHT1, OpenGL.GL_AMBIENT, light1ambient);
+            gl.Light(OpenGL.GL_LIGHT1, OpenGL.GL_DIFFUSE, light1diffuse);
+            gl.Light(OpenGL.GL_LIGHT1, OpenGL.GL_SPECULAR, light1specular);
+            gl.Light(OpenGL.GL_LIGHT1, OpenGL.GL_SPOT_CUTOFF, 30.0f);
+            //gl.Light(OpenGL.GL_LIGHT1, OpenGL.GL_SPOT_EXPONENT, 5.0f);
+            gl.Enable(OpenGL.GL_LIGHT1);
+
         }
 
         private void SetupTextures(OpenGL gl)
         {
+            gl.Enable(OpenGL.GL_TEXTURE_2D);
+            gl.TexEnv(OpenGL.GL_TEXTURE_ENV, OpenGL.GL_TEXTURE_ENV_MODE, OpenGL.GL_ADD);
+
             gl.GenTextures(m_textureCount, m_textures);
             for (int i = 0; i < m_textureCount; ++i)
             {
@@ -208,20 +225,18 @@ namespace AssimpSample
                 BitmapData imageData = image.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
                 gl.Build2DMipmaps(OpenGL.GL_TEXTURE_2D, (int)OpenGL.GL_RGBA8, image.Width, image.Height, OpenGL.GL_BGRA, OpenGL.GL_UNSIGNED_BYTE, imageData.Scan0);
-                gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_LINEAR);		// Linear Filtering
-                gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_LINEAR);      // Linear Filtering
-                
+                gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_NEAREST);
+                gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_NEAREST);
+                gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_WRAP_S, OpenGL.GL_REPEAT);
+                gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_WRAP_T, OpenGL.GL_REPEAT);
+
                 image.UnlockBits(imageData);
                 image.Dispose();
             }
 
-            gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_NEAREST);
-            gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_NEAREST);
-            gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_WRAP_S, OpenGL.GL_REPEAT);
-            gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_WRAP_T, OpenGL.GL_REPEAT);
+            //gl.Enable(OpenGL.GL_TEXTURE_GEN_S);
+            //gl.Enable(OpenGL.GL_TEXTURE_GEN_T);
 
-            gl.Enable(OpenGL.GL_TEXTURE_2D);
-            gl.TexEnv(OpenGL.GL_TEXTURE_ENV, OpenGL.GL_TEXTURE_ENV_MODE, OpenGL.GL_ADD);
         }
 
         /// <summary>
@@ -251,7 +266,7 @@ namespace AssimpSample
 
         private void DrawGround(OpenGL gl)
         {
-            gl.Color(0.0f, 0.0f, 0.0f);
+            gl.Color(0.2f, 0.0f, 0.0f);
             gl.PushMatrix();
             gl.Translate(0, -1f, 0);
 
@@ -279,15 +294,16 @@ namespace AssimpSample
             gl.MatrixMode(OpenGL.GL_MODELVIEW);
 
             gl.PopMatrix();
+            m_scene.Draw();
         }
 
         private void DrawGoal(OpenGL gl)
         {
-            gl.Color(1.0f, 1.0f, 1.0f);
+            gl.Color(0.8f, 0.8f, 0.8f);
 
             gl.PushMatrix();
-            //gl.TexEnv(OpenGL.GL_TEXTURE_ENV, OpenGL.GL_TEXTURE_ENV_MODE, OpenGL.GL_MODULATE);
             gl.BindTexture(OpenGL.GL_TEXTURE_2D, m_textures[(int)TextureObjects.Plastic]);
+            //gl.TexEnv(OpenGL.GL_TEXTURE_ENV, OpenGL.GL_TEXTURE_ENV_MODE, OpenGL.GL_MODULATE);
 
             gl.Translate(-12, -1, -30);
             gl.Rotate(-90, 0, 0);
