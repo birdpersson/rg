@@ -43,7 +43,7 @@ namespace AssimpSample
         /// <summary>
         ///	 Ugao rotacije sveta oko X ose.
         /// </summary>
-        private float m_xRotation = 0.0f;
+        private float m_xRotation = 10.0f;
 
         /// <summary>
         ///	 Ugao rotacije sveta oko Y ose.
@@ -267,6 +267,7 @@ namespace AssimpSample
         private void DrawGround(OpenGL gl)
         {
             gl.Color(0.2f, 0.0f, 0.0f);
+            //gl.Color(0.0f, 0.0f, 0.0f);
             gl.PushMatrix();
             gl.Translate(0, -1f, 0);
 
